@@ -1,7 +1,6 @@
 from flask import Flask, request, json
+from flask import Flask, request
 import pickle
-import numpy as np
-from sklearn.linear_model import LinearRegression
 
 model_file = 'model/decision_tree.pkl'
 
@@ -22,8 +21,10 @@ def make_prediction(request):
 
     return json.dumps(result)
 
-if __name__ == '__main__':
-    from flask import Flask, request
+def main():
     app = Flask(__name__)
     app.route('/',methods=["POST"])(lambda:make_prediction(request))
     app.run(debug=True)
+
+if __name__ == '__main__':    
+    main()
