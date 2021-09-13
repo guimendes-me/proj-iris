@@ -1,22 +1,31 @@
-from flask import escape
+from flask import Flask, request, json
+from flask import Flask, request
+import pickle
 
-def main(request):
-    """HTTP Cloud Function.
-    Args:
-        request (flask.Request): The request object.
-        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
-    Returns:
-        The response text, or any set of values that can be turned into a
-        Response object using `make_response`
-        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
-    """
-    request_json = request.get_json(silent=True)
-    request_args = request.args
+model_file = 'model/decision_tree.pkl'
 
-    if request_json and 'name' in request_json:
-        name = request_json['name']
-    elif request_args and 'name' in request_args:
-        name = request_args['name']
-    else:
-        name = 'World'
-    return 'Hello {}!'.format(escape(name))
+def make_prediction(request):
+    # carregando modelo
+    model = pickle.load(open(model_file,"rb"))
+
+    #recebendo o Post
+    data =  request.get_json(force=True)
+
+    #x = np.array(data["data"]).reshape(1,2)
+    print(data)
+    x = [data["data"]]
+    #fazendo a predicao
+    
+    prediction = model.predict(x)[0]
+    result = {"result": prediction}
+
+    return json.dumps(result)
+
+def main():
+    app = Flask(__name__)
+    app.route('/',methods=["POST"])(lambda:make_prediction(request))
+    app.run(debug=True)
+
+if __name__ == '__main__':    
+    main()
+
