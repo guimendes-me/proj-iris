@@ -21,7 +21,7 @@ def make_prediction(request):
 
     return json.dumps(result)
 
-def main(request):
+def main():
     app = Flask(__name__)
     app.route('/',methods=["POST"])(lambda:make_prediction(request))
     app.run(debug=True)
