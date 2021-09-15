@@ -2,7 +2,7 @@ from flask import Flask, request, json
 from flask import Flask, request
 import pickle
 
-model_file = 'decision_tree.pkl'
+model_file = 'src/model/decision_tree.pkl'
 
 def make_prediction(request):
     # carregando modelo
